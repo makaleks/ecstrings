@@ -5,26 +5,26 @@
 
 // https://stackoverflow.com/a/16254679
 // https://stackoverflow.com/a/23699777
-extern inline char* ecStringGetEntryByChars (
-    struct ECStringEntry *entries_start,
-    size_t               entries_length,
-    char                 dest_chars[4]
+extern inline const char* ecStringGetEntryByChars (
+    const struct ECStringEntry *entries_start,
+    size_t                     entries_length,
+    const char                 dest_chars[4]
 );
-extern inline char* ecStringGetEntryByCode (
-    struct ECStringEntry *entries_start,
-    size_t               entries_length,
-    uint32_t             *dest_code
+extern inline const char* ecStringGetEntryByCode (
+    const struct ECStringEntry *entries_start,
+    size_t                     entries_length,
+    const uint32_t             *dest_code
 );
 
-char* ecStringGetEntry (
-    struct ECStringEntry *entries_start,
-    size_t               entries_length,
-    union ECStringType   *dest_type
+const char* ecStringGetEntry (
+    const struct ECStringEntry *entries_start,
+    size_t                     entries_length,
+    const union ECStringType   *dest_type
 ) {
-    uint32_t             type_dest;
-    uint32_t             type;
-    struct ECStringEntry *entries_end;
-    struct ECStringEntry *middle;
+    uint32_t                   type_dest;
+    uint32_t                   type;
+    const struct ECStringEntry *entries_end;
+    const struct ECStringEntry *middle;
 
 #ifndef NDEBUG
     if (

@@ -34,14 +34,14 @@ Now assume our library's name is 'Hello, world'. Here are some snippents from
 // NOTE: SORT FROM ENDING! CHARACTER SEQUENCES FORM NUMBER IN LITTLE-ENDIAN
 static struct ECStringEntry strings[] = {
     // first default
-    {"Hello, world!",    {.chars="eng"}},
+    {{.chars="eng"}, "Hello, world!"},
     // other sorted by language codes (reverse)
-    {"Hola Mundo!",      {.chars="spa"}},
-    {"Bonjour monde!",   {.chars="fra"}},
-    {"Ciao mondo!",      {.chars="ita"}},
-    {"Olá Mundo!",       {.chars="por"}},
-    {"Здравствуй, мир!", {.chars="rus"}},
-    {"Hallo Welt!",      {.chars="deu"}}
+    {{.chars="spa"}, "Hola Mundo!"},
+    {{.chars="fra"}, "Bonjour monde!"},
+    {{.chars="ita"}, "Ciao mondo!"},
+    {{.chars="por"}, "Olá Mundo!"},
+    {{.chars="rus"}, "Здравствуй, мир!"},
+    {{.chars="deu"}, "Hallo Welt!"}
 };
 
 void provide_string_set (

@@ -14,29 +14,29 @@ union ECStringType {
 };
 
 struct ECStringEntry {
-    char               *utf8_value;
     union ECStringType type;
+    const char         *utf8_value;
 };
 
-char* ecStringGetEntry (
-    struct ECStringEntry *entries_start,
-    size_t               entries_length,
-    union ECStringType   *dest_type
+const char* ecStringGetEntry (
+    const struct ECStringEntry *entries_start,
+    size_t                     entries_length,
+    const union ECStringType   *dest_type
 );
 
-inline char* ecStringGetEntryByCode (
-    struct ECStringEntry *entries_start,
-    size_t               entries_length,
-    uint32_t             *dest_code
+inline const char* ecStringGetEntryByCode (
+    const struct ECStringEntry *entries_start,
+    size_t                     entries_length,
+    const uint32_t             *dest_code
 ) {
     return ecStringGetEntry(
         entries_start, entries_length, (union ECStringType*)dest_code
     );
 }
-inline char* ecStringGetEntryByChars (
-    struct ECStringEntry *entries_start,
-    size_t               entries_length,
-    char                 dest_chars[4]
+inline const char* ecStringGetEntryByChars (
+    const struct ECStringEntry *entries_start,
+    size_t                     entries_length,
+    const char                 dest_chars[4]
 ) {
     return ecStringGetEntry(
         entries_start, entries_length, (union ECStringType*)dest_chars
