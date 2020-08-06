@@ -75,35 +75,43 @@ endfunction ()
 
 function (ecstrings_get_project_targets)
     set(arg_options     "")
-    set(arg_values      "SOURCE_DIR" "BINARY_DIR" "CUSTOM_PREFIX")
+    set(
+        arg_values
+        "SOURCE_BASE_DIR" "SOURCE_DIR_NAME" "BINARY_BASE_DIR" "CUSTOM_PREFIX"
+    )
     set(arg_multivalues "")
     cmake_parse_arguments(
         ECSTRINGS "${arg_options}" "${arg_values}" "${arg_multivalues}" ${ARGN}
     )
 
+    if (NOT DEFINED ECSTRINGS_SOURCE_BASE_DIR)
+        message(FATAL_ERROR "ECSTRINGS_SOURCE_BASE_DIR must be set!")
+    elseif (NOT DEFINED ECSTRINGS_SOURCE_DIR_NAME)
+        set (ECSTRINGS_SOURCE_DIR_NAME "ecstrings")
+    endif ()
+
     if (
-        DEFINED ENV{OVERRIDE_THIRD_PARTY_SOURCE_DIR}
-        AND DEFINED ENV{OVERRIDE_THIRD_PARTY_BINARY_DIR}
+        DEFINED OVERRIDE_THIRD_PARTY_SOURCE_DIR
+        AND DEFINED OVERRIDE_THIRD_PARTY_BINARY_DIR
     )
-        set(ECSTRINGS_SOURCE_DIR $ENV{OVERRIDE_THIRD_PARTY_SOURCE_DIR})
-        set(ECSTRINGS_BINARY_DIR $ENV{OVERRIDE_THIRD_PARTY_BINARY_DIR})
+        set(ECSTRINGS_SOURCE_DIR    ${OVERRIDE_THIRD_PARTY_SOURCE_DIR})
+        set(ECSTRINGS_BINARY_PREFIX "${OVERRIDE_THIRD_PARTY_BINARY_DIR}/ecstrings_dependency")
         set(
-            CMD
-"${CMAKE_COMMAND} -E env \
-OVERRIDE_THIRD_PARTY_SOURCE_DIR=$ENV{OVERRIDE_THIRD_PARTY_SOURCE_DIR} \
-OVERRIDE_THIRD_PARTY_BINARY_DIR=$ENV{OVERRIDE_THIRD_PARTY_BINARY_DIR} \
-${CMAKE_COMMAND}"
+            CMD_ARGS
+"-DOVERRIDE_THIRD_PARTY_SOURCE_DIR=${OVERRIDE_THIRD_PARTY_SOURCE_DIR}"
+"-DOVERRIDE_THIRD_PARTY_BINARY_DIR=${OVERRIDE_THIRD_PARTY_BINARY_DIR}"
         )
     else ()
-        set(CMD "${CMAKE_COMMAND}")
+        set(ECSTRINGS_BINARY_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/ecstrings_dependency")
+        #set(CMD "${CMAKE_COMMAND}")
     endif()
 
     ExternalProject_Add(ecstrings_dependency
-        CMAKE_COMMAND   "${CMD}"
-        SOURCE_DIR      "${ECSTRINGS_SOURCE_DIR}"
-        PREFIX          "ecstrings_dependency"
+        CMAKE_ARGS      ${CMD_ARGS}
+        SOURCE_DIR      "${ECSTRINGS_SOURCE_BASE_DIR}/${ECSTRINGS_SOURCE_DIR_NAME}"
+        PREFIX          "${ECSTRINGS_BINARY_PREFIX}"
         INSTALL_COMMAND ""
-        BINARY_DIR      ${ECSTRINGS_BINARY_DIR}
+        #BINARY_DIR      ${ECSTRINGS_BINARY_DIR}
     )
     ExternalProject_Get_Property(ecstrings_dependency SOURCE_DIR BINARY_DIR)
 
